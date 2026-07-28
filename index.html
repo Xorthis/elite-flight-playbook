@@ -3,470 +3,912 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Commander's Flight Playbook · Elite Dangerous</title>
+  <title>Elite Dangerous Commander's Hub & Flight Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Orbitron:wght@600;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <style>
     :root {
-      --bg-dark: #0b0e14;
-      --card-bg: #131822;
-      --card-hover: #1a212f;
-      --orange-main: #f57c00;
-      --orange-bright: #ff9800;
-      --orange-glow: rgba(245, 124, 0, 0.15);
-      --cyan-acc: #00bcd4;
-      --text-main: #e0e6ed;
-      --text-muted: #8c9ba8;
-      --border-color: #232d3f;
-      --success-green: #2e7d32;
-      --error-red: #c62828;
+      --bg-dark: #07090e;
+      --panel-bg: rgba(15, 20, 29, 0.75);
+      --panel-border: rgba(255, 140, 0, 0.18);
+      --panel-hover: rgba(26, 33, 47, 0.9);
+      
+      --amber-main: #ff8c00;
+      --amber-bright: #ffaa00;
+      --amber-glow: rgba(255, 140, 0, 0.15);
+      
+      --cyan-main: #00d2ff;
+      --cyan-glow: rgba(0, 210, 255, 0.15);
+      
+      --text-bright: #f0f4f8;
+      --text-main: #93a4b8;
+      --text-dim: #5c6b7e;
+      
+      --green-accent: #10b981;
+      --red-accent: #ef4444;
+      
+      --font-display: 'Orbitron', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(255, 140, 0, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(0, 210, 255, 0.04) 0%, transparent 40%);
       color: var(--text-main);
+      font-family: var(--font-body);
       line-height: 1.6;
-      padding-bottom: 60px;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: #1c2433; border-radius: 4px; border: 1px solid var(--panel-border); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--amber-main); }
+
+    /* Header & Navigation Bar */
     header {
-      background: var(--card-bg);
-      border-bottom: 1px solid var(--border-color);
-      padding: 1rem 2rem;
+      background: rgba(11, 14, 20, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--panel-border);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      padding: 0.8rem 2rem;
+    }
+
+    .nav-container {
+      max-width: 1300px;
+      margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      gap: 1rem;
     }
 
-    .logo {
+    .brand {
       display: flex;
       align-items: center;
       gap: 12px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      color: var(--orange-bright);
       text-decoration: none;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      border: 2px solid var(--amber-main);
+      transform: rotate(45deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px var(--amber-glow);
+    }
+
+    .brand-icon::after {
+      content: '';
+      width: 12px;
+      height: 12px;
+      background: var(--amber-bright);
+    }
+
+    .brand-text {
+      font-family: var(--font-display);
+      font-weight: 800;
       font-size: 1.1rem;
+      color: var(--text-bright);
+      letter-spacing: 2px;
     }
 
-    .subtitle { color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+    .brand-text span { color: var(--amber-main); }
 
-    main { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; }
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--green-accent);
+      background: rgba(16, 185, 129, 0.1);
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
 
-    section { margin-bottom: 4rem; }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--green-accent);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--green-accent);
+      animation: pulse 2s infinite;
+    }
 
-    .hero {
-      text-align: center;
-      padding: 3rem 1rem;
-      background: linear-gradient(180deg, var(--orange-glow) 0%, rgba(0,0,0,0) 100%);
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+
+    /* Tab Navigation Bar */
+    .tabs-wrapper {
+      background: rgba(15, 20, 29, 0.6);
+      border-bottom: 1px solid var(--panel-border);
+      position: sticky;
+      top: 57px;
+      z-index: 999;
+      backdrop-filter: blur(8px);
+    }
+
+    .tabs-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      padding: 0 1rem;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      padding: 1rem 1.2rem;
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      border-bottom: 2px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab-btn:hover {
+      color: var(--amber-bright);
+      background: var(--amber-glow);
+    }
+
+    .tab-btn.active {
+      color: var(--amber-bright);
+      border-bottom-color: var(--amber-main);
+      background: rgba(255, 140, 0, 0.08);
+    }
+
+    /* Main Content Layout */
+    main {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 5rem 1.5rem;
+    }
+
+    .tab-content { display: none; animation: fadeIn 0.3s ease; }
+    .tab-content.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Visual Components & Cards */
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(255, 140, 0, 0.12) 0%, rgba(0, 210, 255, 0.05) 100%), var(--panel-bg);
+      border: 1px solid var(--panel-border);
       border-radius: 12px;
-      border: 1px solid var(--border-color);
-      margin-bottom: 3rem;
+      padding: 3rem 2rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
     }
 
-    .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; color: #fff; }
-    .hero p { color: var(--text-muted); max-width: 650px; margin: 0 auto 1.5rem auto; font-size: 1.1rem; }
-    .hero-btn {
-      display: inline-block;
-      background: var(--orange-main);
-      color: #fff;
-      padding: 0.8rem 1.8rem;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: background 0.2s;
+    .hero-banner::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 300px; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,140,0,0.05));
+      pointer-events: none;
     }
-    .hero-btn:hover { background: var(--orange-bright); }
 
-    .section-header {
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 0.8rem;
+    .hero-banner h1 {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      color: var(--text-bright);
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .hero-banner p {
+      max-width: 750px;
+      color: var(--text-main);
+      font-size: 1.05rem;
       margin-bottom: 1.5rem;
     }
-    .section-num { color: var(--orange-bright); font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; }
-    .section-header h2 { font-size: 1.6rem; color: #fff; margin-top: 0.2rem; }
-    .section-header p { color: var(--text-muted); font-size: 0.95rem; }
 
-    /* Mindset Grid */
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 1.5rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+    
+    @media (max-width: 600px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+
     .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 10px;
       padding: 1.5rem;
+      backdrop-filter: blur(6px);
+      transition: all 0.25s ease;
+      position: relative;
     }
-    .card-num { color: var(--orange-bright); font-weight: 800; font-size: 1.2rem; margin-bottom: 0.5rem; }
-    .card h3 { color: #fff; margin-bottom: 0.5rem; font-size: 1.1rem; }
-    .card p { color: var(--text-muted); font-size: 0.9rem; }
 
-    .callout {
-      margin-top: 1.5rem;
-      background: var(--orange-glow);
-      border-left: 4px solid var(--orange-bright);
-      padding: 1.2rem;
-      border-radius: 0 8px 8px 0;
+    .card:hover {
+      border-color: rgba(255, 140, 0, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     }
-    .callout strong { color: var(--orange-bright); }
 
-    /* Sequence Beats */
-    .beat-list { display: flex; flex-direction: column; gap: 1rem; }
-    .beat-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      color: var(--text-bright);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-amber { background: var(--amber-glow); color: var(--amber-bright); border: 1px solid var(--amber-main); }
+    .badge-cyan { background: var(--cyan-glow); color: var(--cyan-main); border: 1px solid var(--cyan-main); }
+
+    .callout-box {
+      background: rgba(0, 210, 255, 0.05);
+      border-left: 3px solid var(--cyan-main);
+      padding: 1rem 1.2rem;
+      border-radius: 0 6px 6px 0;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+
+    .callout-box strong { color: var(--cyan-main); }
+
+    /* Collapsible Sections */
+    details {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
       border-radius: 8px;
-      padding: 1.2rem 1.5rem;
-      display: grid;
-      grid-template-columns: 40px 1fr 1.5fr;
-      gap: 1.5rem;
+      margin-bottom: 0.8rem;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    details:hover { border-color: var(--amber-main); }
+
+    summary {
+      padding: 1rem 1.2rem;
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      color: var(--text-bright);
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      justify-content: space-between;
       align-items: center;
     }
-    @media (max-width: 768px) {
-      .beat-card { grid-template-columns: 1fr; gap: 0.5rem; }
-    }
-    .beat-num {
-      width: 36px; height: 36px; border-radius: 50%; background: var(--orange-glow);
-      color: var(--orange-bright); font-weight: 700; display: flex; align-items: center; justify-content: center;
-    }
-    .beat-info h3 { font-size: 1.05rem; color: #fff; }
-    .beat-info p { font-size: 0.85rem; color: var(--text-muted); }
-    .beat-content { background: var(--bg-dark); padding: 0.8rem 1rem; border-radius: 6px; font-size: 0.88rem; border: 1px solid var(--border-color); }
-    .cue { color: var(--cyan-acc); font-weight: 600; font-size: 0.8rem; margin-top: 0.4rem; display: block; }
 
-    /* Interactive Scenarios */
-    .scenario-box { margin-bottom: 1.5rem; }
-    .scenario-quote {
-      background: var(--card-bg); border-left: 3px solid var(--cyan-acc); padding: 1rem;
-      border-radius: 0 6px 6px 0; font-style: italic; margin-bottom: 1rem; color: #fff;
+    summary::-webkit-details-marker { display: none; }
+
+    summary::after {
+      content: '+';
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      color: var(--amber-bright);
     }
-    .btn-group { display: flex; flex-direction: column; gap: 0.5rem; }
-    .option-btn {
-      background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main);
-      padding: 0.8rem 1rem; border-radius: 6px; text-align: left; cursor: pointer; transition: all 0.2s;
+
+    details[open] summary::after { content: '−'; }
+
+    .details-body {
+      padding: 0 1.2rem 1.2rem 1.2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.92rem;
+      color: var(--text-main);
     }
-    .option-btn:hover { background: var(--card-hover); border-color: var(--orange-bright); }
-    .feedback { margin-top: 0.8rem; padding: 0.8rem; border-radius: 6px; display: none; font-size: 0.9rem; }
-    .feedback.correct { background: rgba(46, 125, 50, 0.2); border: 1px solid var(--success-green); color: #81c784; }
-    .feedback.incorrect { background: rgba(198, 40, 40, 0.2); border: 1px solid var(--error-red); color: #e57373; }
 
-    /* Accordion Details */
-    details { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 0.5rem; padding: 0.8rem 1rem; }
-    summary { cursor: pointer; font-weight: 600; color: #fff; outline: none; }
-    details p { margin-top: 0.8rem; color: var(--text-muted); font-size: 0.9rem; }
+    /* Key/Value Specs Table */
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.8rem;
+      font-size: 0.88rem;
+    }
 
-    /* Certification Quiz */
-    .quiz-container { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; }
-    .quiz-progress { height: 6px; background: var(--bg-dark); border-radius: 3px; overflow: hidden; margin: 1rem 0; }
-    .quiz-bar { height: 100%; width: 0%; background: var(--orange-bright); transition: width 0.3s; }
+    .spec-table td {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
 
-    /* Notes Sandbox */
+    .spec-table td:first-child {
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      width: 40%;
+    }
+
+    .spec-table td:last-child {
+      color: var(--text-bright);
+      font-weight: 500;
+    }
+
+    /* Interactive Scenarios & Quiz */
+    .option-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--panel-border);
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 0.6rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .option-card:hover {
+      background: var(--amber-glow);
+      border-color: var(--amber-main);
+    }
+
+    .feedback-panel {
+      padding: 1rem;
+      border-radius: 6px;
+      margin-top: 1rem;
+      display: none;
+      font-size: 0.9rem;
+    }
+
+    .feedback-panel.success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--green-accent);
+      color: #a7f3d0;
+    }
+
+    .feedback-panel.danger {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid var(--red-accent);
+      color: #fca5a5;
+    }
+
+    /* Notepad / Sandbox */
     textarea {
-      width: 100%; height: 150px; background: var(--bg-dark); border: 1px solid var(--border-color);
-      border-radius: 6px; color: var(--text-main); padding: 1rem; font-family: monospace; resize: vertical;
+      width: 100%;
+      height: 180px;
+      background: rgba(7, 9, 14, 0.8);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 1rem;
+      color: var(--text-bright);
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      resize: vertical;
+      margin-top: 0.8rem;
     }
-    .save-status { font-size: 0.8rem; color: var(--cyan-acc); margin-top: 0.4rem; }
 
-    footer { text-align: center; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border-color); padding-top: 2rem; margin-top: 4rem; }
+    textarea:focus {
+      outline: none;
+      border-color: var(--amber-main);
+      box-shadow: 0 0 10px var(--amber-glow);
+    }
+
+    footer {
+      border-top: 1px solid var(--panel-border);
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      background: rgba(7, 9, 14, 0.9);
+    }
   </style>
 </head>
 <body>
 
+  <!-- Top Header Bar -->
   <header>
-    <a href="#" class="logo">
-      <span>PILOT ACADEMY</span>
-    </a>
-    <div class="subtitle">Elite Dangerous Flight Studio</div>
+    <div class="nav-container">
+      <a href="#" class="brand">
+        <div class="brand-icon"></div>
+        <div class="brand-text">PILOT<span>HUB</span></div>
+      </a>
+      <div class="status-badge">
+        <div class="pulse-dot"></div>
+        <span>TELEMETRY ONLINE · ED HORIZONS / ODYSSEY</span>
+      </div>
+    </div>
   </header>
+
+  <!-- Section Navigation Tabs -->
+  <div class="tabs-wrapper">
+    <div class="tabs-container">
+      <button class="tab-btn active" onclick="switchTab('core')">01 · Flight Sequence</button>
+      <button class="tab-btn" onclick="switchTab('professions')">02 · Career Path Matrix</button>
+      <button class="tab-btn" onclick="switchTab('sightseeing')">03 · Sightseeing Tour</button>
+      <button class="tab-btn" onclick="switchTab('tools')">04 · Tools & Engineering</button>
+      <button class="tab-btn" onclick="switchTab('simulator')">05 · Simulator & Assessment</button>
+      <button class="tab-btn" onclick="switchTab('log')">06 · Pilot Logbook</button>
+    </div>
+  </div>
 
   <main>
 
-    <!-- Hero Banner -->
-    <section class="hero">
-      <h1>Before the Void, Master the Deck</h1>
-      <p>An interactive flight playbook designed for Commanders stepping into the cockpit. Build operational confidence, understand spatial mechanics, and survive the dark.</p>
-      <a href="#mindset" class="hero-btn">Begin Flight Training</a>
-    </section>
+    <!-- ==================== TAB 01: CORE FLIGHT SEQUENCE ==================== -->
+    <div id="tab-core" class="tab-content active">
+      <div class="hero-banner">
+        <h1>Flight Manual & Operational Protocols</h1>
+        <p>Mastering core navigation, landing deck etiquette, and supercruise dynamics prevents multi-million credit rebuy screen disasters.</p>
+      </div>
 
-    <!-- 01 Mindset -->
-    <section id="mindset">
-      <div class="section-header">
-        <div class="section-num">01 · CORE PHILOSOPHY</div>
-        <h2>The Three Golden Rules of Pilot Survival</h2>
-        <p>Space is cold, vast, and unforgiving. Skill is built on habits, not guesswork.</p>
+      <div class="grid-3" style="margin-bottom: 2rem;">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Rule #1</div>
+            <span class="badge badge-amber">CRITICAL</span>
+          </div>
+          <p><strong>Never fly without your Rebuy.</strong> Always keep enough liquid Credits to cover your insurance deductible (5% of total ship value). No exceptions.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Rule #2</div>
+            <span class="badge badge-cyan">POWER</span>
+          </div>
+          <p><strong>4 PIPs to SYS grants 2.4x shield strength.</strong> When taking fire or bracing for impact, redirect power instantly to Systems.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Rule #3</div>
+            <span class="badge badge-amber">NAVIGATION</span>
+          </div>
+          <p><strong>High-Wake ignores Mass Lock.</strong> Jumping to another star system cannot be blocked by nearby heavy enemy ships, unlike supercruise Low-Wakes.</p>
+        </div>
+      </div>
+
+      <h2 style="font-family: var(--font-display); color: var(--text-bright); margin-bottom: 1rem;">Core Navigation Beats</h2>
+
+      <details open>
+        <summary>01 · The 7-Second Supercruise Approach Rule</summary>
+        <div class="details-body">
+          <p>When approaching stations or planets in Supercruise:</p>
+          <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+            <li>Set throttle to 100% until the countdown timer reaches <strong>0:07 seconds</strong>.</li>
+            <li>Immediately drop throttle to <strong>75% (the center of the blue band)</strong>.</li>
+            <li>If done correctly, your speed will throttle down in perfect ratio to the destination's gravitational well, preventing overshooting.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details>
+        <summary>02 · Fuel Scooping Protocol (KGBFOAM Rule)</summary>
+        <div class="details-body">
+          <p>Only main-sequence stars yield scoopable hydrogen fuel. Remember the acronym <strong>KGBFOAM</strong>.</p>
+          <div class="callout-box">
+            <strong>Galaxy Map Tip:</strong> Go to Galaxy Map -> Map Filters -> Star Class -> Check K, G, B, F, O, A, M. Check "Apply Filter to Route".
+          </div>
+          <p>Approach the star's upper atmosphere outside the yellow Exclusion Zone line. Maintain heat under 80% while harvesting.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>03 · Neutron Star Jet Cone Supercharging</summary>
+        <div class="details-body">
+          <p>Supercharges your Frame Shift Drive, multiplying jump range by <strong>400%</strong> for one jump:</p>
+          <ol style="margin-left: 1.5rem; margin-top: 0.5rem;">
+            <li>Equip a Fuel Scoop.</li>
+            <li>Fly into the outer cone fringe facing <em>away</em> from the neutron star core.</li>
+            <li>Ride the turbulence until the HUD flashes <strong>"FSD Operating Beyond Safety Limits"</strong>.</li>
+            <li>Vector out smoothly and execute your mega-jump.</li>
+          </ol>
+        </div>
+      </details>
+    </div>
+
+    <!-- ==================== TAB 02: CAREER PATH MATRIX ==================== -->
+    <div id="tab-professions" class="tab-content">
+      <div class="hero-banner">
+        <h1>Galactic Profession Guides</h1>
+        <p>Whether trading rare metals, cracking asteroids open, mapping virgin star systems, or hunting Thargoids—choose your path.</p>
+      </div>
+
+      <div class="grid-2">
+
+        <!-- Profession 1: Hauling -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Commercial Hauling & Trade</div>
+            <span class="badge badge-amber">LOW RISK / HIGH CR</span>
+          </div>
+          <p>Transporting commodities across systems using supply/demand price disparities or station repair loops.</p>
+          <table class="spec-table">
+            <tr><td>Progression Ships</td><td>Hauler → Type-6 → Type-7 / Python → Type-9 / Imperial Cutter</td></tr>
+            <tr><td>Core Modules</td><td>Frame Shift Drive (A-Rated), Cargo Racks, Shield Generator (D-Rated)</td></tr>
+            <tr><td>Key Mechanics</td><td>Loop Trading, Rare Commodity Hauling, Carrier Supply Supply Lines</td></tr>
+          </table>
+          <div class="callout-box">
+            <strong>Golden Tip:</strong> Use Inara.cz or EDDB to find current high-demand silver or gold trade loops near your system.
+          </div>
+        </div>
+
+        <!-- Profession 2: Deep Core Mining -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Core & Laser Mining</div>
+            <span class="badge badge-cyan">HIGH YIELD</span>
+          </div>
+          <p>Locating high-value asteroids (Void Opals, Low Temperature Diamonds, Platinum) and splitting them with seismic charges.</p>
+          <table class="spec-table">
+            <tr><td>Progression Ships</td><td>Cobra Mk III → Asp Explorer → Python → Anaconda</td></tr>
+            <tr><td>Core Modules</td><td>Pulse Wave Analyzer, Seismic Charge Launcher, Abrasion Blaster, Prospector & Collector Limpet Controllers</td></tr>
+            <tr><td>Key Mechanics</td><td>Scanning ring hotspots, reading seismic fissures, detonating charges in optimal yield bands.</td></tr>
+          </table>
+        </div>
+
+        <!-- Profession 3: Deep Space Exploration -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Deep Space Exploration</div>
+            <span class="badge badge-amber">DISCOVERY & EXPEDITIONS</span>
+          </div>
+          <p>Charting unmapped solar systems thousands of light-years outside the inhabited human Bubble.</p>
+          <table class="spec-table">
+            <tr><td>Progression Ships</td><td>Hauler → Diamondback Explorer → Asp Explorer → Krait Phantom</td></tr>
+            <tr><td>Core Modules</td><td>Detailed Surface Scanner (DSS), Fuel Scoop (Max Size A-Rate), SRV Bay, AFMU Repair Unit</td></tr>
+            <tr><td>Key Mechanics</td><td>FSS Radio Spectrum Scanning, Mapping Earth-Like Worlds (ELWs), Jet Cone Boosting.</td></tr>
+          </table>
+        </div>
+
+        <!-- Profession 4: Exobiology -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Exobiology (Odyssey)</div>
+            <span class="badge badge-cyan">EXPLORATION BONUS</span>
+          </div>
+          <p>Landing on thin-atmosphere worlds to scan xenological plant species using the Genetic Sampler tool.</p>
+          <table class="spec-table">
+            <tr><td>Gear Required</td><td>Artemis Suit with Genetic Sampler</td></tr>
+            <tr><td>Payout Scale</td><td>First Discovery Bonus multiplies payout by <strong>5x</strong> (Up to 90M+ Cr per planet).</td></tr>
+            <tr><td>Core Rule</td><td>Must collect 3 distinct samples per species separated by minimum distance (150m - 800m depending on genus).</td></tr>
+          </table>
+        </div>
+
+        <!-- Profession 5: Bounty Hunting -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Bounty Hunting & Combat</div>
+            <span class="badge badge-amber">HIGH ACTION</span>
+          </div>
+          <p>Engaging wanted criminals at Resource Extraction Sites (RES) or Conflict Zones (CZ) for Combat Bonds.</p>
+          <table class="spec-table">
+            <tr><td>Progression Ships</td><td>Viper Mk III → Vulture → Krait Mk II → Federal Corvette</td></tr>
+            <tr><td>Weapon Mix</td><td>Thermal (Beam/Pulse Lasers) to drop Shields + Kinetic (Multi-cannons) to breach Hull.</td></tr>
+            <tr><td>Tactics</td><td>Sub-system targeting (Power Plant targeting to disable ships quickly).</td></tr>
+          </table>
+        </div>
+
+        <!-- Profession 6: AX Combat -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Anti-Xeno (AX) Combat</div>
+            <span class="badge badge-cyan">ENDGAME COMBAT</span>
+          </div>
+          <p>Defending humanity against Thargoid Interceptors (Cyclops, Basilisk, Medusa, Hydra).</p>
+          <table class="spec-table">
+            <tr><td>Recommended Ships</td><td>Krait Mk II, Chieftain, Challenger</td></tr>
+            <tr><td>Key Weapons</td><td>Guardian Gauss Cannons, Enhanced AX Multi-cannons, Flak Cannons</td></tr>
+            <tr><td>Key Mechanics</td><td>Cold Orbiting (keeping heat below 20% while strafing), exert hearts, neutralize panic waves.</td></tr>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==================== TAB 03: SIGHTSEEING TOUR ==================== -->
+    <div id="tab-sightseeing" class="tab-content">
+      <div class="hero-banner">
+        <h1>First-Play Sightseeing Guide</h1>
+        <p>A curated itinerary of iconic galactic wonders within or near the Bubble every Commander should visit once.</p>
       </div>
 
       <div class="grid-3">
+
         <div class="card">
-          <div class="card-num">01</div>
-          <h3>Never Fly Without Rebuy</h3>
-          <p>Always maintain enough liquid Credits to cover your ship's insurance deductible. If you die without a rebuy, your ship is gone forever.</p>
+          <div class="card-header">
+            <div class="card-title">01 · Mitterrand Hollow</div>
+            <span class="badge badge-amber">EPSILON INDI</span>
+          </div>
+          <p>A moon orbiting its parent supergiant planet at supersonic velocity. Its orbit is so fast that it lands on <em>you</em>.</p>
+          <table class="spec-table">
+            <tr><td>Location</td><td>Epsilon Indi → Planet 8c</td></tr>
+            <tr><td>Distance from Sol</td><td>11.8 LY</td></tr>
+            <tr><td>Flight Warning</td><td>Do not try to catch it in supercruise. Line up in its orbital path and let it pull you in.</td></tr>
+          </table>
         </div>
+
         <div class="card">
-          <div class="card-num">02</div>
-          <h3>Respect Power & Physics</h3>
-          <p>Mastering your Power Distribution (PIPs) and Thruster Vectoring is more critical to survival than buying high-grade shield boosters.</p>
+          <div class="card-header">
+            <div class="card-title">02 · Jackson's Lighthouse</div>
+            <span class="badge badge-cyan">NEUTRON STAR</span>
+          </div>
+          <p>The closest Neutron Star to human space (Sol). Perfect place to practice supercharging your FSD jump drives.</p>
+          <table class="spec-table">
+            <tr><td>Location</td><td>Jackson's Lighthouse</td></tr>
+            <tr><td>Distance from Sol</td><td>144 LY</td></tr>
+            <tr><td>Highlight</td><td>Massive violent plasma cones; 4x jump range boost.</td></tr>
+          </table>
         </div>
+
         <div class="card">
-          <div class="card-num">03</div>
-          <h3>Understand System Threats</h3>
-          <p>Read the Security Level and Anarchy status of every target system before pressing the hyperdrive trigger.</p>
-        </div>
-      </div>
-
-      <div class="callout">
-        <strong>The Golden Standard:</strong> Shields absorb mistakes; thrusters avoid them; insurance pays for the rest.
-      </div>
-    </section>
-
-    <!-- 02 Flight Beats -->
-    <section>
-      <div class="section-header">
-        <div class="section-num">02 · FLIGHT BEATS</div>
-        <h2>Nine Core Pilot Maneuvers</h2>
-        <p>Follow the sequence. Execute with discipline in every system arrival and departure.</p>
-      </div>
-
-      <div class="beat-list">
-
-        <div class="beat-card">
-          <div class="beat-num">1</div>
-          <div class="beat-info">
-            <h3>Station Launch & Mailbox</h3>
-            <p>Navigating station rotational gravity</p>
+          <div class="card-header">
+            <div class="card-title">03 · Maia Black Hole</div>
+            <span class="badge badge-amber">PLEIADES NEBULA</span>
           </div>
-          <div class="beat-content">
-            Request docking clearance within 7.5km. Align with the center of the green light side of the slot. Retract landing gear immediately to clear mass lock.
-            <span class="cue">Flight Cue: Keep velocity under 100 m/s in station space to avoid reckless flying fines.</span>
-          </div>
+          <p>Located in the heart of the Pleiades Nebula, featuring a stellar-mass black hole with incredible gravitational lensing.</p>
+          <table class="spec-table">
+            <tr><td>Location</td><td>Maia System</td></tr>
+            <tr><td>Distance from Sol</td><td>383 LY</td></tr>
+            <tr><td>Bonus Stop</td><td>Visit Professor Palin or Darnielle's Progress to pick up Meta-Alloys.</td></tr>
+          </table>
         </div>
 
-        <div class="beat-card">
-          <div class="beat-num">2</div>
-          <div class="beat-info">
-            <h3>The 7-Second Supercruise Rule</h3>
-            <p>Approaching stations without overshooting</p>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">04 · Sol System & Earth</div>
+            <span class="badge badge-cyan">CRADLE OF HUMANITY</span>
           </div>
-          <div class="beat-content">
-            Approach target at full throttle. When time-to-destination reaches 0:07 seconds, pull throttle back into the center of the blue band (75% power).
-            <span class="cue">Flight Cue: Never let the timer drop below 0:06 or you will loop past the gravity well.</span>
-          </div>
+          <p>Humanity's birthplace. Visit Earth, Mars (terraformed), and locate the ancient Voyager 1 and 2 probes deep in space.</p>
+          <table class="spec-table">
+            <tr><td>Permit Needed</td><td>Sol Permit (Rank up with Federation Navy to Petty Officer).</td></tr>
+            <tr><td>Distance</td><td>0 LY</td></tr>
+          </table>
         </div>
 
-        <div class="beat-card">
-          <div class="beat-num">3</div>
-          <div class="beat-info">
-            <h3>Fuel Scooping & Heat Management</h3>
-            <p>Harvesting main sequence stars</p>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">05 · VY Canis Majoris</div>
+            <span class="badge badge-amber">HYPERGIANT STAR</span>
           </div>
-          <div class="beat-content">
-            Only scoop KGBFOAM class stars. Skirt the corona until rate caps out; balance scoop yield against heat accumulation.
-            <span class="cue">Flight Cue: Keep heat below 80%. If heat exceeds 100%, throttle down and vector away immediately.</span>
-          </div>
+          <p>One of the largest known red hypergiants in existence. Scooping fuel here feels like flying across a fiery wall.</p>
+          <table class="spec-table">
+            <tr><td>Location</td><td>VY Canis Majoris</td></tr>
+            <tr><td>Distance from Sol</td><td>1,424 LY</td></tr>
+          </table>
         </div>
 
-        <div class="beat-card">
-          <div class="beat-num">4</div>
-          <div class="beat-info">
-            <h3>Interdiction Escape</h3>
-            <p>Evading hostile tethering</p>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">06 · Sagittarius A*</div>
+            <span class="badge badge-cyan">GALACTIC CENTER</span>
           </div>
-          <div class="beat-content">
-            Center throttle in the blue band. Roll ship to line up horizontal thrusters with the shifting Escape Vector escape ring.
-            <span class="cue">Flight Cue: In heavy cargo haulers, submit to interdiction immediately (throttle 0%) to get a fast 5-second FSD cooldown.</span>
-          </div>
-        </div>
-
-        <div class="beat-card">
-          <div class="beat-num">5</div>
-          <div class="beat-info">
-            <h3>Neutron Jet Cone Boost</h3>
-            <p>Supercharging your jump range by 400%</p>
-          </div>
-          <div class="beat-content">
-            Equip an Fuel Scoop. Fly into the outer tail edge of a Neutron star's cone, facing away from the star core. Hold position until FSD is supercharged.
-            <span class="cue">Flight Cue: NEVER enter a White Dwarf cone unless experienced; stay away from the exclusion zone.</span>
-          </div>
+          <p>The supermassive black hole at the center of the Milky Way galaxy. The ultimate rite of passage for all explorers.</p>
+          <table class="spec-table">
+            <tr><td>Location</td><td>Galactic Center</td></tr>
+            <tr><td>Distance from Sol</td><td>25,899 LY</td></tr>
+            <tr><td>Pioneers Hub</td><td>Stop at <em>Explorer's Anchorage</em> station just 3 LY away for repair and cartographics.</td></tr>
+          </table>
         </div>
 
       </div>
-    </section>
+    </div>
 
-    <!-- 03 Tactical Exercises -->
-    <section>
-      <div class="section-header">
-        <div class="section-num">03 · TACTICAL SCENARIOS</div>
-        <h2>Cockpit Decision Exercises</h2>
-        <p>Test your reaction under pressure. Choose the safest tactical response.</p>
+    <!-- ==================== TAB 04: TOOLS & ENGINEERING ==================== -->
+    <div id="tab-tools" class="tab-content">
+      <div class="hero-banner">
+        <h1>Third-Party Ecosystem & Outfitting Standard</h1>
+        <p>No Commander plays alone. Utilize the community-built intelligence tools that power galactic navigation and ship engineering.</p>
       </div>
 
-      <div class="scenario-box">
-        <div class="scenario-quote">
-          "You are interdicted by a player pirate while flying a fully laden Type-9 Heavy cargo transport. Your shields are weak. What is your immediate tactic?"
+      <div class="grid-2" style="margin-bottom: 2rem;">
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Core Community Web Tools</div>
+            <span class="badge badge-amber">INTELLIGENCE</span>
+          </div>
+          <p><strong>Inara.cz:</strong> The master database for trade routes, engineer blueprints, community goals, and pilot profiles.</p>
+          <p style="margin-top:0.5rem;"><strong>Spansh.co.uk:</strong> The Neutron Router tool that plots lightning-fast galaxy traversals using jet cone supercharges.</p>
+          <p style="margin-top:0.5rem;"><strong>Coriolis.io / EDSY.org:</strong> Ship outfitting simulators to plan builds, heat management, and jump ranges before spending credits.</p>
+          <p style="margin-top:0.5rem;"><strong>EDMC (Elite Dangerous Market Connector):</strong> Background client to sync your local log data directly to live trade networks.</p>
         </div>
-        <div class="btn-group">
-          <button class="option-btn" onclick="checkScenario(this, false, 'Fighting the interdiction in a heavy ship takes too long and leads to an FSD reboot penalty of 40s if you lose!')">A. Fight the interdiction vector with full throttle.</button>
-          <button class="option-btn" onclick="checkScenario(this, true, 'Correct! Submitting gives you a 5-second FSD reboot. Putting 4 PIPs in SYS maximizes shield strength, and High-Waking (jumping to another star system) bypasses mass lock!')">B. Throttle to zero to submit, put 4 PIPs to SYS, target a neighboring star system, and High-Wake.</button>
-          <button class="option-btn" onclick="checkScenario(this, false, 'Low-waking back into Supercruise subjects you to mass lock from the pirate ship, allowing them to destroy you.')">C. Submit, turn around, and attempt to Low-Wake back into supercruise.</button>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Module Rating Golden Rules</div>
+            <span class="badge badge-cyan">OUTFITTING 101</span>
+          </div>
+          <p>Module letter classes represent specific trade-offs across all modules:</p>
+          <ul style="margin-left: 1.5rem; margin-top: 0.5rem; font-size: 0.9rem;">
+            <li><strong>A-Rated:</strong> Peak performance, highest efficiency, heavy power draw.</li>
+            <li><strong>B-Rated:</strong> Highest integrity/armored (heavy mass, durable).</li>
+            <li><strong>C-Rated:</strong> Best cost-to-performance balance.</li>
+            <li><strong>D-Rated:</strong> Ultra-lightweight (essential for exploration builds to maximize jump range).</li>
+            <li><strong>E-Rated:</strong> Stock budget modules (replace these immediately).</li>
+          </ul>
         </div>
-        <div class="feedback"></div>
-      </div>
-    </section>
 
-    <!-- 04 Reference Bank -->
-    <section>
-      <div class="section-header">
-        <div class="section-num">04 · COMMAND BANK</div>
-        <h2>Quick Reference Guides</h2>
       </div>
 
-      <details>
-        <summary>KGBFOAM Star Types (Scoopable)</summary>
-        <p>Remember the acronym <strong>KGBFOAM</strong> (K, G, B, F, O, A, M). These are the only main-sequence stars that yield scoopable hydrogen fuel. Set your Galaxy Map route filter to these types only.</p>
+      <h2 style="font-family: var(--font-display); color: var(--text-bright); margin-bottom: 1rem;">Engineering Roadmap (First Unlock Chain)</h2>
+
+      <details open>
+        <summary>01 · Felicity Farseer (Deciat System)</summary>
+        <div class="details-body">
+          <p><strong>Unlocks:</strong> Frame Shift Drive Increased Range (Grade 5) + Thrusters Clean/Dirty (Grade 3).</p>
+          <p><strong>Unlock Requirement:</strong> Provide 1x Meta-Alloy (purchase at Darnielle's Progress in Maia or harvest in Pleiades).</p>
+        </div>
       </details>
 
       <details>
-        <summary>Power Distribution (PIP Allocation)</summary>
-        <p><strong>4 SYS:</strong> Shield damage resistance increased by ~2.4x.<br>
-        <strong>4 ENG:</strong> Maximum agility, pitch rate, and boost replenishment.<br>
-        <strong>4 WEP:</strong> Drains capacitor slower, allowing continuous laser fire.</p>
+        <summary>02 · The Dweller (Wyrd System)</summary>
+        <div class="details-body">
+          <p><strong>Unlocks:</strong> Power Distribution Charge Enhanced (Grade 5).</p>
+          <p><strong>Unlock Requirement:</strong> Sell black market goods at 5 different stations.</p>
+        </div>
       </details>
 
       <details>
-        <summary>Modules Priority Management</summary>
-        <p>Set your <strong>Frame Shift Drive, Fuel Scoop, and Cargo Rack</strong> to Priority 2 or 3. Keep <strong>Thrusters, Shields, and Sensors</strong> on Priority 1 so your ship stays operational if your Power Plant drops below 100% capacity.</p>
+        <summary>03 · Todd "The Blaster" McQuinn (Trophy Camp)</summary>
+        <div class="details-body">
+          <p><strong>Unlocks:</strong> Multi-cannons Overcharged (Grade 5).</p>
+          <p><strong>Unlock Requirement:</strong> Hand in 100,000 Credits worth of Bounty Vouchers.</p>
+        </div>
       </details>
-    </section>
+    </div>
 
-    <!-- 05 Certification Quiz -->
-    <section>
-      <div class="section-header">
-        <div class="section-num">05 · KNOWLEDGE CHECK</div>
-        <h2>Flight Certification Quiz</h2>
+    <!-- ==================== TAB 05: SIMULATOR & QUIZ ==================== -->
+    <div id="tab-simulator" class="tab-content">
+      <div class="hero-banner">
+        <h1>Cockpit Crisis Simulator & Certification</h1>
+        <p>Test your tactical reaction speed under simulated flight deck emergencies.</p>
       </div>
 
-      <div class="quiz-container">
-        <div id="quiz-body">
-          <h3 id="quiz-question">Question loading...</h3>
-          <div class="quiz-progress"><div class="quiz-bar" id="quiz-bar"></div></div>
-          <div class="btn-group" id="quiz-options" style="margin-top: 1rem;"></div>
+      <div class="grid-2">
+
+        <!-- Scenario 1 -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Crisis Scenario 01</div>
+            <span class="badge badge-amber">HEAT EMERGENCY</span>
+          </div>
+          <p style="margin-bottom: 1rem;">Your ship drops out near a binary star system. Heat is rising rapidly (115%), modules are taking damage, and FSD is charging slowly.</p>
+
+          <div class="option-card" onclick="runScenario(1, false, 'Boosting increases internal thermal output, pushing heat above 150% and melting your modules!')">
+            A. Boost main engines at full throttle to fly away faster.
+          </div>
+          <div class="option-card" onclick="runScenario(1, true, 'Correct! Popping a Heat Sink drops temperature instantly to 0%, allowing safe FSD execution without cooking your hull.')">
+            B. Pop a Heat Sink, deploy heat vents, and align with escape vector.
+          </div>
+          <div class="option-card" onclick="runScenario(1, false, 'Charging FSD while overheating causes catastrophic heat cascade damage.')">
+            C. Engage FSD immediately regardless of heat.
+          </div>
+
+          <div id="scenario-1-feedback" class="feedback-panel"></div>
+        </div>
+
+        <!-- Scenario 2 -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Crisis Scenario 02</div>
+            <span class="badge badge-cyan">HYPERSPACE INTERDICTION</span>
+          </div>
+          <p style="margin-bottom: 1rem;">A pirate player ship interdicts your unengineered Type-9 Heavy loaded with 700 tons of Gold.</p>
+
+          <div class="option-card" onclick="runScenario(2, false, 'Heavy cargo ships rarely win interdiction mini-games against fast combat ships. Losing gives a 40s FSD cool down penalty.')">
+            A. Attempt to fight the steering vector to win interdiction.
+          </div>
+          <div class="option-card" onclick="runScenario(2, true, 'Spot on! Submitting grants a fast 5-second FSD cooldown. High-waking ignores mass lock from the pirate ship!')">
+            B. Submit immediately (0% throttle), put 4 PIPs to SYS, target nearby star system, and High-Wake.
+          </div>
+          <div class="option-card" onclick="runScenario(2, false, 'Low-waking leaves you mass-locked by the pirate ship, giving them plenty of time to breach your hull.')">
+            C. Submit and try to Low-Wake back into supercruise.
+          </div>
+
+          <div id="scenario-2-feedback" class="feedback-panel"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==================== TAB 06: PILOT LOGBOOK ==================== -->
+    <div id="tab-log" class="tab-content">
+      <div class="hero-banner">
+        <h1>Commander's Flight Log & Notepad</h1>
+        <p>Save active trade routes, engineering material checklists, and custom keybinding notes directly to local storage.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Encrypted Local Pilot Journal</div>
+          <span class="badge badge-amber">LOCAL STORAGE</span>
+        </div>
+        <p>Write your raw flight records below. Data stays preserved in your browser instance.</p>
+        
+        <textarea id="journal-input" placeholder="// COMMANDER'S LOGBOOK...&#10;- Active Trade Loop: System A -> System B&#10;- Material Checklist: Datamined Wake Exceptions (5/15)&#10;- Target Ship Fit: Krait Phantom Exploration Spec"></textarea>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.8rem;">
+          <span id="save-indicator" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--cyan-main);">Autosaved</span>
+          <button onclick="clearJournal()" style="background: transparent; border: 1px solid var(--red-accent); color: var(--red-accent); padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Clear Journal</button>
         </div>
       </div>
-    </section>
-
-    <!-- 06 Sandbox Notes -->
-    <section>
-      <div class="section-header">
-        <div class="section-num">06 · PILOT LOG</div>
-        <h2>Flight Notes & Custom Checklist</h2>
-        <p>Saved automatically in your local browser storage.</p>
-      </div>
-
-      <textarea id="pilot-notes" placeholder="Write custom keybindings, material gathering lists, or trade routes here..."></textarea>
-      <div class="save-status" id="save-status">Notes saved locally</div>
-    </section>
+    </div>
 
   </main>
 
   <footer>
-    Elite Dangerous Flight Academy · Built for Commanders exploring the Galaxy
+    Elite Dangerous Pilot Academy Hub · Developed for active Commanders across the Milky Way
   </footer>
 
   <script>
-    // Scenario check function
-    function checkScenario(btn, isCorrect, explanation) {
-      const parent = btn.closest('.scenario-box');
-      const feedback = parent.querySelector('.feedback');
+    // Tab Switching Logic
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
       
-      feedback.style.display = 'block';
+      document.getElementById('tab-' + tabId).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+
+    // Scenario Checker logic
+    function runScenario(id, isCorrect, msg) {
+      const fb = document.getElementById(`scenario-${id}-feedback`);
+      fb.style.display = 'block';
       if (isCorrect) {
-        feedback.className = 'feedback correct';
-        feedback.innerHTML = '<strong>Correct Tactical Decision!</strong> ' + explanation;
+        fb.className = 'feedback-panel success';
+        fb.innerHTML = '<strong>SUCCESSFUL EXECUTION:</strong> ' + msg;
       } else {
-        feedback.className = 'feedback incorrect';
-        feedback.innerHTML = '<strong>Tactical Error!</strong> ' + explanation;
+        fb.className = 'feedback-panel danger';
+        fb.innerHTML = '<strong>CRITICAL ERROR:</strong> ' + msg;
       }
     }
 
-    // Quiz Data
-    const quizData = [
-      {
-        q: "What does putting 4 PIPs into SYS do during combat?",
-        options: [
-          "Recharges shield strength faster only.",
-          "Increases shield damage resistance by approximately 150% (2.4x effective health).",
-          "Increases ship top speed."
-        ],
-        correct: 1,
-        explain: "4 PIPs in SYS grants maximum damage resistance to active shields."
-      },
-      {
-        q: "What is the optimal throttle percentage when time-to-destination reaches 7 seconds in supercruise?",
-        options: ["100%", "75% (Blue Band)", "0%"],
-        correct: 1,
-        explain: "75% throttle maintains the 7-second approach rule, preventing overshooting."
-      },
-      {
-        q: "Which stars CANNOT be fuel scooped?",
-        options: ["O, B, A", "T, L, Y (Brown Dwarfs)", "M, K, G"],
-        correct: 1,
-        explain: "T, L, and Y class stars are cold brown dwarfs and contain no scoopable fuel."
-      }
-    ];
+    // Pilot Log Storage
+    const journal = document.getElementById('journal-input');
+    const indicator = document.getElementById('save-indicator');
 
-    let currentQ = 0;
-    let score = 0;
+    journal.value = localStorage.getItem('ed_hub_journal') || '';
 
-    function renderQuiz() {
-      if (currentQ >= quizData.length) {
-        document.getElementById('quiz-body').innerHTML = `
-          <h3>Certification Complete!</h3>
-          <p style="margin-top:0.5rem; color: var(--text-muted);">You scored <strong>${score} / ${quizData.length}</strong> on the flight assessment.</p>
-          <button class="hero-btn" style="margin-top:1rem;" onclick="resetQuiz()">Retake Assessment</button>
-        `;
-        return;
-      }
-
-      const q = quizData[currentQ];
-      document.getElementById('quiz-question').innerText = `Q${currentQ + 1}: ${q.q}`;
-      document.getElementById('quiz-bar').style.width = `${((currentQ) / quizData.length) * 100}%`;
-
-      const optionsContainer = document.getElementById('quiz-options');
-      optionsContainer.innerHTML = '';
-
-      q.options.forEach((opt, idx) => {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        btn.innerText = opt;
-        btn.onclick = () => {
-          if (idx === q.correct) score++;
-          currentQ++;
-          renderQuiz();
-        };
-        optionsContainer.appendChild(btn);
-      });
-    }
-
-    function resetQuiz() {
-      currentQ = 0;
-      score = 0;
-      renderQuiz();
-    }
-
-    // Pilot Notes LocalStorage
-    const notesArea = document.getElementById('pilot-notes');
-    const saveStatus = document.getElementById('save-status');
-
-    notesArea.value = localStorage.getItem('ed_pilot_notes') || '';
-
-    notesArea.addEventListener('input', () => {
-      localStorage.setItem('ed_pilot_notes', notesArea.value);
-      saveStatus.innerText = 'Notes saved at ' + new Date().toLocaleTimeString();
+    journal.addEventListener('input', () => {
+      localStorage.setItem('ed_hub_journal', journal.value);
+      indicator.innerText = 'Saved at ' + new Date().toLocaleTimeString();
     });
 
-    // Init Quiz
-    renderQuiz();
+    function clearJournal() {
+      if (confirm("Clear all flight notes?")) {
+        journal.value = '';
+        localStorage.removeItem('ed_hub_journal');
+        indicator.innerText = 'Journal Cleared';
+      }
+    }
   </script>
 </body>
 </html>
