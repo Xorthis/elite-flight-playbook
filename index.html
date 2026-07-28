@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commander's Flight Playbook · Elite Dangerous</title>
+  <style>
+    :root {
+      --bg-dark: #0b0e14;
+      --card-bg: #131822;
+      --card-hover: #1a212f;
+      --orange-main: #f57c00;
+      --orange-bright: #ff9800;
+      --orange-glow: rgba(245, 124, 0, 0.15);
+      --cyan-acc: #00bcd4;
+      --text-main: #e0e6ed;
+      --text-muted: #8c9ba8;
+      --border-color: #232d3f;
+      --success-green: #2e7d32;
+      --error-red: #c62828;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--orange-bright);
+      text-decoration: none;
+      font-size: 1.1rem;
+    }
+
+    .subtitle { color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+
+    main { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+    section { margin-bottom: 4rem; }
+
+    .hero {
+      text-align: center;
+      padding: 3rem 1rem;
+      background: linear-gradient(180deg, var(--orange-glow) 0%, rgba(0,0,0,0) 100%);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 3rem;
+    }
+
+    .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; color: #fff; }
+    .hero p { color: var(--text-muted); max-width: 650px; margin: 0 auto 1.5rem auto; font-size: 1.1rem; }
+    .hero-btn {
+      display: inline-block;
+      background: var(--orange-main);
+      color: #fff;
+      padding: 0.8rem 1.8rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .hero-btn:hover { background: var(--orange-bright); }
+
+    .section-header {
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .section-num { color: var(--orange-bright); font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; }
+    .section-header h2 { font-size: 1.6rem; color: #fff; margin-top: 0.2rem; }
+    .section-header p { color: var(--text-muted); font-size: 0.95rem; }
+
+    /* Mindset Grid */
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    .card-num { color: var(--orange-bright); font-weight: 800; font-size: 1.2rem; margin-bottom: 0.5rem; }
+    .card h3 { color: #fff; margin-bottom: 0.5rem; font-size: 1.1rem; }
+    .card p { color: var(--text-muted); font-size: 0.9rem; }
+
+    .callout {
+      margin-top: 1.5rem;
+      background: var(--orange-glow);
+      border-left: 4px solid var(--orange-bright);
+      padding: 1.2rem;
+      border-radius: 0 8px 8px 0;
+    }
+    .callout strong { color: var(--orange-bright); }
+
+    /* Sequence Beats */
+    .beat-list { display: flex; flex-direction: column; gap: 1rem; }
+    .beat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.2rem 1.5rem;
+      display: grid;
+      grid-template-columns: 40px 1fr 1.5fr;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    @media (max-width: 768px) {
+      .beat-card { grid-template-columns: 1fr; gap: 0.5rem; }
+    }
+    .beat-num {
+      width: 36px; height: 36px; border-radius: 50%; background: var(--orange-glow);
+      color: var(--orange-bright); font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+    .beat-info h3 { font-size: 1.05rem; color: #fff; }
+    .beat-info p { font-size: 0.85rem; color: var(--text-muted); }
+    .beat-content { background: var(--bg-dark); padding: 0.8rem 1rem; border-radius: 6px; font-size: 0.88rem; border: 1px solid var(--border-color); }
+    .cue { color: var(--cyan-acc); font-weight: 600; font-size: 0.8rem; margin-top: 0.4rem; display: block; }
+
+    /* Interactive Scenarios */
+    .scenario-box { margin-bottom: 1.5rem; }
+    .scenario-quote {
+      background: var(--card-bg); border-left: 3px solid var(--cyan-acc); padding: 1rem;
+      border-radius: 0 6px 6px 0; font-style: italic; margin-bottom: 1rem; color: #fff;
+    }
+    .btn-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .option-btn {
+      background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main);
+      padding: 0.8rem 1rem; border-radius: 6px; text-align: left; cursor: pointer; transition: all 0.2s;
+    }
+    .option-btn:hover { background: var(--card-hover); border-color: var(--orange-bright); }
+    .feedback { margin-top: 0.8rem; padding: 0.8rem; border-radius: 6px; display: none; font-size: 0.9rem; }
+    .feedback.correct { background: rgba(46, 125, 50, 0.2); border: 1px solid var(--success-green); color: #81c784; }
+    .feedback.incorrect { background: rgba(198, 40, 40, 0.2); border: 1px solid var(--error-red); color: #e57373; }
+
+    /* Accordion Details */
+    details { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 0.5rem; padding: 0.8rem 1rem; }
+    summary { cursor: pointer; font-weight: 600; color: #fff; outline: none; }
+    details p { margin-top: 0.8rem; color: var(--text-muted); font-size: 0.9rem; }
+
+    /* Certification Quiz */
+    .quiz-container { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; }
+    .quiz-progress { height: 6px; background: var(--bg-dark); border-radius: 3px; overflow: hidden; margin: 1rem 0; }
+    .quiz-bar { height: 100%; width: 0%; background: var(--orange-bright); transition: width 0.3s; }
+
+    /* Notes Sandbox */
+    textarea {
+      width: 100%; height: 150px; background: var(--bg-dark); border: 1px solid var(--border-color);
+      border-radius: 6px; color: var(--text-main); padding: 1rem; font-family: monospace; resize: vertical;
+    }
+    .save-status { font-size: 0.8rem; color: var(--cyan-acc); margin-top: 0.4rem; }
+
+    footer { text-align: center; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border-color); padding-top: 2rem; margin-top: 4rem; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="#" class="logo">
+      <span>PILOT ACADEMY</span>
+    </a>
+    <div class="subtitle">Elite Dangerous Flight Studio</div>
+  </header>
+
+  <main>
+
+    <!-- Hero Banner -->
+    <section class="hero">
+      <h1>Before the Void, Master the Deck</h1>
+      <p>An interactive flight playbook designed for Commanders stepping into the cockpit. Build operational confidence, understand spatial mechanics, and survive the dark.</p>
+      <a href="#mindset" class="hero-btn">Begin Flight Training</a>
+    </section>
+
+    <!-- 01 Mindset -->
+    <section id="mindset">
+      <div class="section-header">
+        <div class="section-num">01 · CORE PHILOSOPHY</div>
+        <h2>The Three Golden Rules of Pilot Survival</h2>
+        <p>Space is cold, vast, and unforgiving. Skill is built on habits, not guesswork.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-num">01</div>
+          <h3>Never Fly Without Rebuy</h3>
+          <p>Always maintain enough liquid Credits to cover your ship's insurance deductible. If you die without a rebuy, your ship is gone forever.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">02</div>
+          <h3>Respect Power & Physics</h3>
+          <p>Mastering your Power Distribution (PIPs) and Thruster Vectoring is more critical to survival than buying high-grade shield boosters.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">03</div>
+          <h3>Understand System Threats</h3>
+          <p>Read the Security Level and Anarchy status of every target system before pressing the hyperdrive trigger.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>The Golden Standard:</strong> Shields absorb mistakes; thrusters avoid them; insurance pays for the rest.
+      </div>
+    </section>
+
+    <!-- 02 Flight Beats -->
+    <section>
+      <div class="section-header">
+        <div class="section-num">02 · FLIGHT BEATS</div>
+        <h2>Nine Core Pilot Maneuvers</h2>
+        <p>Follow the sequence. Execute with discipline in every system arrival and departure.</p>
+      </div>
+
+      <div class="beat-list">
+
+        <div class="beat-card">
+          <div class="beat-num">1</div>
+          <div class="beat-info">
+            <h3>Station Launch & Mailbox</h3>
+            <p>Navigating station rotational gravity</p>
+          </div>
+          <div class="beat-content">
+            Request docking clearance within 7.5km. Align with the center of the green light side of the slot. Retract landing gear immediately to clear mass lock.
+            <span class="cue">Flight Cue: Keep velocity under 100 m/s in station space to avoid reckless flying fines.</span>
+          </div>
+        </div>
+
+        <div class="beat-card">
+          <div class="beat-num">2</div>
+          <div class="beat-info">
+            <h3>The 7-Second Supercruise Rule</h3>
+            <p>Approaching stations without overshooting</p>
+          </div>
+          <div class="beat-content">
+            Approach target at full throttle. When time-to-destination reaches 0:07 seconds, pull throttle back into the center of the blue band (75% power).
+            <span class="cue">Flight Cue: Never let the timer drop below 0:06 or you will loop past the gravity well.</span>
+          </div>
+        </div>
+
+        <div class="beat-card">
+          <div class="beat-num">3</div>
+          <div class="beat-info">
+            <h3>Fuel Scooping & Heat Management</h3>
+            <p>Harvesting main sequence stars</p>
+          </div>
+          <div class="beat-content">
+            Only scoop KGBFOAM class stars. Skirt the corona until rate caps out; balance scoop yield against heat accumulation.
+            <span class="cue">Flight Cue: Keep heat below 80%. If heat exceeds 100%, throttle down and vector away immediately.</span>
+          </div>
+        </div>
+
+        <div class="beat-card">
+          <div class="beat-num">4</div>
+          <div class="beat-info">
+            <h3>Interdiction Escape</h3>
+            <p>Evading hostile tethering</p>
+          </div>
+          <div class="beat-content">
+            Center throttle in the blue band. Roll ship to line up horizontal thrusters with the shifting Escape Vector escape ring.
+            <span class="cue">Flight Cue: In heavy cargo haulers, submit to interdiction immediately (throttle 0%) to get a fast 5-second FSD cooldown.</span>
+          </div>
+        </div>
+
+        <div class="beat-card">
+          <div class="beat-num">5</div>
+          <div class="beat-info">
+            <h3>Neutron Jet Cone Boost</h3>
+            <p>Supercharging your jump range by 400%</p>
+          </div>
+          <div class="beat-content">
+            Equip an Fuel Scoop. Fly into the outer tail edge of a Neutron star's cone, facing away from the star core. Hold position until FSD is supercharged.
+            <span class="cue">Flight Cue: NEVER enter a White Dwarf cone unless experienced; stay away from the exclusion zone.</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 03 Tactical Exercises -->
+    <section>
+      <div class="section-header">
+        <div class="section-num">03 · TACTICAL SCENARIOS</div>
+        <h2>Cockpit Decision Exercises</h2>
+        <p>Test your reaction under pressure. Choose the safest tactical response.</p>
+      </div>
+
+      <div class="scenario-box">
+        <div class="scenario-quote">
+          "You are interdicted by a player pirate while flying a fully laden Type-9 Heavy cargo transport. Your shields are weak. What is your immediate tactic?"
+        </div>
+        <div class="btn-group">
+          <button class="option-btn" onclick="checkScenario(this, false, 'Fighting the interdiction in a heavy ship takes too long and leads to an FSD reboot penalty of 40s if you lose!')">A. Fight the interdiction vector with full throttle.</button>
+          <button class="option-btn" onclick="checkScenario(this, true, 'Correct! Submitting gives you a 5-second FSD reboot. Putting 4 PIPs in SYS maximizes shield strength, and High-Waking (jumping to another star system) bypasses mass lock!')">B. Throttle to zero to submit, put 4 PIPs to SYS, target a neighboring star system, and High-Wake.</button>
+          <button class="option-btn" onclick="checkScenario(this, false, 'Low-waking back into Supercruise subjects you to mass lock from the pirate ship, allowing them to destroy you.')">C. Submit, turn around, and attempt to Low-Wake back into supercruise.</button>
+        </div>
+        <div class="feedback"></div>
+      </div>
+    </section>
+
+    <!-- 04 Reference Bank -->
+    <section>
+      <div class="section-header">
+        <div class="section-num">04 · COMMAND BANK</div>
+        <h2>Quick Reference Guides</h2>
+      </div>
+
+      <details>
+        <summary>KGBFOAM Star Types (Scoopable)</summary>
+        <p>Remember the acronym <strong>KGBFOAM</strong> (K, G, B, F, O, A, M). These are the only main-sequence stars that yield scoopable hydrogen fuel. Set your Galaxy Map route filter to these types only.</p>
+      </details>
+
+      <details>
+        <summary>Power Distribution (PIP Allocation)</summary>
+        <p><strong>4 SYS:</strong> Shield damage resistance increased by ~2.4x.<br>
+        <strong>4 ENG:</strong> Maximum agility, pitch rate, and boost replenishment.<br>
+        <strong>4 WEP:</strong> Drains capacitor slower, allowing continuous laser fire.</p>
+      </details>
+
+      <details>
+        <summary>Modules Priority Management</summary>
+        <p>Set your <strong>Frame Shift Drive, Fuel Scoop, and Cargo Rack</strong> to Priority 2 or 3. Keep <strong>Thrusters, Shields, and Sensors</strong> on Priority 1 so your ship stays operational if your Power Plant drops below 100% capacity.</p>
+      </details>
+    </section>
+
+    <!-- 05 Certification Quiz -->
+    <section>
+      <div class="section-header">
+        <div class="section-num">05 · KNOWLEDGE CHECK</div>
+        <h2>Flight Certification Quiz</h2>
+      </div>
+
+      <div class="quiz-container">
+        <div id="quiz-body">
+          <h3 id="quiz-question">Question loading...</h3>
+          <div class="quiz-progress"><div class="quiz-bar" id="quiz-bar"></div></div>
+          <div class="btn-group" id="quiz-options" style="margin-top: 1rem;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 Sandbox Notes -->
+    <section>
+      <div class="section-header">
+        <div class="section-num">06 · PILOT LOG</div>
+        <h2>Flight Notes & Custom Checklist</h2>
+        <p>Saved automatically in your local browser storage.</p>
+      </div>
+
+      <textarea id="pilot-notes" placeholder="Write custom keybindings, material gathering lists, or trade routes here..."></textarea>
+      <div class="save-status" id="save-status">Notes saved locally</div>
+    </section>
+
+  </main>
+
+  <footer>
+    Elite Dangerous Flight Academy · Built for Commanders exploring the Galaxy
+  </footer>
+
+  <script>
+    // Scenario check function
+    function checkScenario(btn, isCorrect, explanation) {
+      const parent = btn.closest('.scenario-box');
+      const feedback = parent.querySelector('.feedback');
+      
+      feedback.style.display = 'block';
+      if (isCorrect) {
+        feedback.className = 'feedback correct';
+        feedback.innerHTML = '<strong>Correct Tactical Decision!</strong> ' + explanation;
+      } else {
+        feedback.className = 'feedback incorrect';
+        feedback.innerHTML = '<strong>Tactical Error!</strong> ' + explanation;
+      }
+    }
+
+    // Quiz Data
+    const quizData = [
+      {
+        q: "What does putting 4 PIPs into SYS do during combat?",
+        options: [
+          "Recharges shield strength faster only.",
+          "Increases shield damage resistance by approximately 150% (2.4x effective health).",
+          "Increases ship top speed."
+        ],
+        correct: 1,
+        explain: "4 PIPs in SYS grants maximum damage resistance to active shields."
+      },
+      {
+        q: "What is the optimal throttle percentage when time-to-destination reaches 7 seconds in supercruise?",
+        options: ["100%", "75% (Blue Band)", "0%"],
+        correct: 1,
+        explain: "75% throttle maintains the 7-second approach rule, preventing overshooting."
+      },
+      {
+        q: "Which stars CANNOT be fuel scooped?",
+        options: ["O, B, A", "T, L, Y (Brown Dwarfs)", "M, K, G"],
+        correct: 1,
+        explain: "T, L, and Y class stars are cold brown dwarfs and contain no scoopable fuel."
+      }
+    ];
+
+    let currentQ = 0;
+    let score = 0;
+
+    function renderQuiz() {
+      if (currentQ >= quizData.length) {
+        document.getElementById('quiz-body').innerHTML = `
+          <h3>Certification Complete!</h3>
+          <p style="margin-top:0.5rem; color: var(--text-muted);">You scored <strong>${score} / ${quizData.length}</strong> on the flight assessment.</p>
+          <button class="hero-btn" style="margin-top:1rem;" onclick="resetQuiz()">Retake Assessment</button>
+        `;
+        return;
+      }
+
+      const q = quizData[currentQ];
+      document.getElementById('quiz-question').innerText = `Q${currentQ + 1}: ${q.q}`;
+      document.getElementById('quiz-bar').style.width = `${((currentQ) / quizData.length) * 100}%`;
+
+      const optionsContainer = document.getElementById('quiz-options');
+      optionsContainer.innerHTML = '';
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerText = opt;
+        btn.onclick = () => {
+          if (idx === q.correct) score++;
+          currentQ++;
+          renderQuiz();
+        };
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function resetQuiz() {
+      currentQ = 0;
+      score = 0;
+      renderQuiz();
+    }
+
+    // Pilot Notes LocalStorage
+    const notesArea = document.getElementById('pilot-notes');
+    const saveStatus = document.getElementById('save-status');
+
+    notesArea.value = localStorage.getItem('ed_pilot_notes') || '';
+
+    notesArea.addEventListener('input', () => {
+      localStorage.setItem('ed_pilot_notes', notesArea.value);
+      saveStatus.innerText = 'Notes saved at ' + new Date().toLocaleTimeString();
+    });
+
+    // Init Quiz
+    renderQuiz();
+  </script>
+</body>
+</html>
